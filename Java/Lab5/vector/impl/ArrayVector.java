@@ -4,7 +4,7 @@ import pr5.vector.IncompatibleVectorSizesException;
 import pr5.vector.Vector;
 import pr5.vector.VectorIndexOutOfBoundsException;
 
-public class ArrayVector implements Vector, Cloneable {
+public class ArrayVector implements Vector, Cloneable, java.io.Serializable {
 	protected double vector[];
 
 	// constructor

@@ -2,13 +2,17 @@ package pr5.vector;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
@@ -64,9 +68,13 @@ public class Vectors {
 		}
 	}
 
-	// записи вектора в байтовый поток
+
+
+
+	// запись вектора в байтовый поток
 	static void outputVector(Vector v, OutputStream out) {
 		try {
+			((DataOutputStream) out).writeInt(v.getSize());
 			for (int i = 0; i < v.getSize(); i++) {
 				((DataOutputStream) out).writeDouble(v.getElement(i));
 			}
@@ -76,13 +84,24 @@ public class Vectors {
 		}
 	}
 
-	// чтения вектора из байтового потока
-	Vector inputVector(InputStream in) {
+	// чтение вектора из байтового потока
+	static Vector inputVector(InputStream in) {
+		int size;
+		try {
+			size = ((DataInputStream) in).readInt();
+			Vector v = new ArrayVector(size);
+			for (int i = 0; i < size; i++) {
+				v.setElement(i, ((DataInputStream) in).readDouble());
+			}
+			return v;
+		} catch (IOException e) {
+			System.out.println("Some error occurred!");
+		}
 
 		return null;
 	}
 
-	// записи вектора в символьный поток
+	// запись вектора в символьный поток
 	static void writeVector(Vector v, Writer out) throws IOException {
 		((PrintWriter) out).print(v.getSize() + " ");
 		for (int i = 0; i < v.getSize(); i++) {
@@ -91,13 +110,12 @@ public class Vectors {
 
 	}
 
-	// чтения вектора из символьного потока
+	// чтение вектора из символьного потока
 	static Vector readVector(Reader in) {
 		try {
 			StreamTokenizer st = new StreamTokenizer(in);
 			st.nextToken();
 			int size = (int) st.nval;
-			System.out.println(size);
 			Vector v = new ArrayVector(size);
 			for (int i = 0; i < size; i++) {
 				st.nextToken();
@@ -111,38 +129,43 @@ public class Vectors {
 		return null;
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	public static void main(String[] args) throws pr5.vector.IncompatibleVectorSizesException, IOException {
-		// TODO Auto-generated method stub
+	public static void main(String[] args) throws pr5.vector.IncompatibleVectorSizesException, IOException, ClassNotFoundException {
+		// Tests
 		double[] cats = { 2, 5, 7, 8, 3, 1 };
 		double[] dogs = { 2, 5, 7, 8, 3 };
 		ArrayVector v = new ArrayVector(cats.length);
 		v.fillFromMass(cats);
-		ArrayVector v2 = new ArrayVector(dogs.length);
-
-		v2.fillFromMass(dogs);
-		System.out.println(v2.toString());
-		DataOutputStream out = new DataOutputStream(new FileOutputStream("dogs.bin"));
-		outputVector(v2, out);
-		out.close();
-
-		PrintWriter out2 = new PrintWriter(new BufferedWriter(new FileWriter("out.txt")));
-		writeVector(v2, out2);
-		out2.close();
-
-		BufferedReader in = new BufferedReader(new FileReader("out.txt")); // InputStreamReader(System.in));
-
-		System.out.println(readVector(in).toString());
+//		ArrayVector v2 = new ArrayVector(dogs.length);
+//		v2.fillFromMass(dogs);
+//
+//		DataOutputStream out = new DataOutputStream(new FileOutputStream("dogs.bin"));
+//		outputVector(v2, out);
+//		out.close();
+//
+//		DataInputStream in = new DataInputStream(new FileInputStream("dogs.bin"));
+//		System.out.println(inputVector(in).toString());
+//
+//		in.close();
+//
+//
+//		PrintWriter out2 = new PrintWriter(new BufferedWriter(new FileWriter("cats.txt")));
+//		writeVector(v, out2);
+//		out2.close();
+//
+//		BufferedReader in1 = new BufferedReader(new FileReader("cats.txt"));
+//		System.out.println(readVector(in1).toString());
+//		in1.close();
+		
+		// РЎРµСЂРёР°Р»РёР·Р°С†РёСЏ		
+		ObjectOutputStream out1 = new ObjectOutputStream(new FileOutputStream("out.bin"));
+		out1.writeObject(v);
+		out1.close();
+		
+		// Р”РµСЃР°СЂРёР°Р»РёР·Р°С†РёСЏ
+		ObjectInputStream in = new ObjectInputStream(new FileInputStream("out.bin"));
+		Vector vv = (Vector)in.readObject();
+		System.out.println(vv.toString());;
+		in.close();
 
 	}
 
