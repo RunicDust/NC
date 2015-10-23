@@ -1,6 +1,6 @@
 package pr2;
 
-//implementation of merge sort for array of doubles
+//implementation of merge sort for array of doubles from Algorithms-Part-1
 public class Sort {
 
 	// merge
@@ -26,7 +26,7 @@ public class Sort {
 
 	}
 
-	// sorting method
+	// recursive sorting 
 	private static void sort(double[] a, double[] aux, int lo, int hi) {
 		if (hi <= lo)
 			return;
@@ -36,7 +36,7 @@ public class Sort {
 		merge(a, aux, lo, mid, hi);
 	}
 	
-	//recursive call
+	//method call
 	public static void sort(double[] a) {
 		double[] aux = new double[a.length];
 		sort(a, aux, 0, a.length - 1);
