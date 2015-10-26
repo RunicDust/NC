@@ -480,58 +480,58 @@ public class VectorTest {
 		assertArrayEquals(original, ((VectorImpl) result1).getData(), 0.0);
 	}
 
-	// For ArrayVector implimentation testing
-
-	public class VectorImpl extends ArrayVector {
-
-		public VectorImpl(int size) {
-			super(size);
-		}
-
-		public double[] getData() {
-			return super.vector;
-		}
-
-		public void setData(double[] data) {
-			super.vector = data;
-		}
-
-	}
-
-	// For LinkedVector implimentation testing
-
-	// public class VectorImpl extends LinkedVector {
+	// // For ArrayVector implimentation testing
+	//
+	// public class VectorImpl extends ArrayVector {
 	//
 	// public VectorImpl(int size) {
-	// super();
-	// for (int i=0;i<size;i++) {
-	// super.addElement(0.0);
-	// }
+	// super(size);
 	// }
 	//
 	// public double[] getData() {
-	// double[] data = new double[size];
-	// for (int i=0; i<size;i++) {
-	// data[i] = super.goToElement(i).element;
-	// }
-	// return data;
+	// return super.vector;
 	// }
 	//
 	// public void setData(double[] data) {
-	// for (int i=0; i<data.length;i++) {
-	// if (i == 0) {
-	// head = new Nod(data[0]);
-	// head.prev = head;
-	// head.next = head;
-	// size++;
-	// } else {
-	// insertElementBefore(head, new Nod(data[i]));
+	// super.vector = data;
 	// }
 	//
 	// }
-	//
-	// }
-	//
-	// }
+
+	// For LinkedVector implimentation testing
+
+	public class VectorImpl extends LinkedVector {
+
+		public VectorImpl(int size) {
+			super();
+			for (int i = 0; i < size; i++) {
+				super.addElement(0.0);
+			}
+		}
+
+		public double[] getData() {
+			double[] data = new double[size];
+			for (int i = 0; i < size; i++) {
+				data[i] = super.goToElement(i).element;
+			}
+			return data;
+		}
+
+		public void setData(double[] data) {
+			for (int i = 0; i < data.length; i++) {
+				if (i == 0) {
+					head = new Nod(data[0]);
+					head.prev = head;
+					head.next = head;
+					size++;
+				} else {
+					insertElementBefore(head, new Nod(data[i]));
+				}
+
+			}
+
+		}
+
+	}
 
 }
