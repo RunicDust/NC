@@ -117,23 +117,31 @@ public class LinkedVector implements Vector, Cloneable {
 		if (getSize() != v.getSize()) {
 			throw new IncompatibleVectorSizesException();
 		} else {
+			Nod current = head;
 			for (int i = 0; i < getSize(); i++) {
-				setElement(i, getElement(i) + v.getElement(i));
+				setElement(i, current.element + v.getElement(i));
+				current = current.next;
 			}
 		}
 	}
 
 	@Override
 	public void insertElement(int num, double value) {
-		if (num < 0 || num > size + 1) {
-			throw new VectorIndexOutOfBoundsException("Bad index!");
-		}
 		if (num == size) {
 			addElement(value);
 			return;
 		}
+		if (num < 0 || num > size) {
+			throw new VectorIndexOutOfBoundsException("Bad index!");
+		}
+
 		Nod newNod = new Nod(value);
 		insertElementBefore(goToElement(num), newNod);
+		
+		if (num == 0) {
+			head = head.prev;
+			return;
+		}
 	}
 
 	@Override
@@ -146,11 +154,13 @@ public class LinkedVector implements Vector, Cloneable {
 
 	@Override
 	public String toString() {
+		Nod current = head;
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < getSize(); i++) {
-			sb.append(getElement(i)).append(" ");
+			sb.append(current.element).append(" ");
+			current = current.next;
 		}
-		return sb.toString();
+		return sb.toString().trim();
 	}
 
 	@Override
@@ -158,6 +168,27 @@ public class LinkedVector implements Vector, Cloneable {
 		LinkedVector LVClone = (LinkedVector) super.clone();
 		LVClone.fillFromVector(this);
 		return LVClone;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (!(o instanceof Vector))
+			return false;
+		Vector vect = (Vector) o;
+		if (size != vect.getSize())
+			return false;
+		int index = 0;
+		Nod current = head;
+		while (index != size) {
+			if (current.element != vect.getElement(index))
+				return false;
+			current = current.next;
+			index++;
+		}
+
+		return true;
 	}
 
 	public static void main(String[] args) throws IncompatibleVectorSizesException {

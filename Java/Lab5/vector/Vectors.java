@@ -20,6 +20,7 @@ import java.io.StreamTokenizer;
 import java.io.Writer;
 
 import pr5.vector.impl.ArrayVector;
+import pr5.vector.impl.LinkedVector;
 
 public class Vectors {
 	// merge
@@ -42,7 +43,6 @@ public class Vectors {
 			else
 				a[k] = aux[i++];
 		}
-
 	}
 
 	// sorting method
@@ -68,105 +68,98 @@ public class Vectors {
 		}
 	}
 
-
-
-
-	// запись вектора в байтовый поток
-	static void outputVector(Vector v, OutputStream out) {
-		try {
-			((DataOutputStream) out).writeInt(v.getSize());
-			for (int i = 0; i < v.getSize(); i++) {
-				((DataOutputStream) out).writeDouble(v.getElement(i));
-			}
-
-		} catch (IOException e) {
-			System.out.println("Some error occurred!");
-		}
-	}
-
-	// чтение вектора из байтового потока
-	static Vector inputVector(InputStream in) {
-		int size;
-		try {
-			size = ((DataInputStream) in).readInt();
-			Vector v = new ArrayVector(size);
-			for (int i = 0; i < size; i++) {
-				v.setElement(i, ((DataInputStream) in).readDouble());
-			}
-			return v;
-		} catch (IOException e) {
-			System.out.println("Some error occurred!");
-		}
-
-		return null;
-	}
-
-	// запись вектора в символьный поток
-	static void writeVector(Vector v, Writer out) throws IOException {
-		((PrintWriter) out).print(v.getSize() + " ");
+	//
+	static void outputVector(Vector v, OutputStream out) throws IOException {
+		DataOutputStream dOut = new DataOutputStream(out);
+		dOut.writeInt(v.getSize());
 		for (int i = 0; i < v.getSize(); i++) {
-			((PrintWriter) out).print(v.getElement(i) + " ");
+			dOut.writeDouble(v.getElement(i));
 		}
-
 	}
 
-	// чтение вектора из символьного потока
-	static Vector readVector(Reader in) {
-		try {
-			StreamTokenizer st = new StreamTokenizer(in);
+	//
+	static Vector inputVector(InputStream in) throws IOException {
+		DataInputStream dIn = new DataInputStream(in);
+		int size = dIn.readInt();
+		Vector v = new ArrayVector(size);
+		for (int i = 0; i < size; i++) {
+			v.setElement(i, dIn.readDouble());
+		}
+		return v;
+	}
+
+	//
+	static void writeVector(Vector v, Writer out) throws IOException {
+		PrintWriter pW = new PrintWriter(out);
+		pW.print(v.getSize());
+		for (int i = 0; i < v.getSize(); i++) {
+			pW.print(" " + v.getElement(i));
+		}
+		pW.append("\n");
+		
+	}
+
+	//
+	static Vector readVector(Reader in) throws IOException {
+		StreamTokenizer st = new StreamTokenizer(in);
+		st.nextToken();
+		int size = (int) st.nval;
+		Vector v = new ArrayVector(size);
+		for (int i = 0; i < size; i++) {
 			st.nextToken();
-			int size = (int) st.nval;
-			Vector v = new ArrayVector(size);
-			for (int i = 0; i < size; i++) {
-				st.nextToken();
-				v.setElement(i, (double) st.nval);
-			}
-			return v;
-
-		} catch (IOException e) {
-			System.out.println("Some error occurred!");
+			v.setElement(i, (double) st.nval);
 		}
-		return null;
+		return v;
 	}
 
-	public static void main(String[] args) throws pr5.vector.IncompatibleVectorSizesException, IOException, ClassNotFoundException {
-		// Tests
+	public static void main(String[] args)
+			throws pr5.vector.IncompatibleVectorSizesException, IOException, ClassNotFoundException {
+		// TODO Auto-generated method stub
 		double[] cats = { 2, 5, 7, 8, 3, 1 };
 		double[] dogs = { 2, 5, 7, 8, 3 };
 		ArrayVector v = new ArrayVector(cats.length);
 		v.fillFromMass(cats);
-//		ArrayVector v2 = new ArrayVector(dogs.length);
-//		v2.fillFromMass(dogs);
-//
-//		DataOutputStream out = new DataOutputStream(new FileOutputStream("dogs.bin"));
-//		outputVector(v2, out);
-//		out.close();
-//
-//		DataInputStream in = new DataInputStream(new FileInputStream("dogs.bin"));
-//		System.out.println(inputVector(in).toString());
-//
-//		in.close();
-//
-//
-//		PrintWriter out2 = new PrintWriter(new BufferedWriter(new FileWriter("cats.txt")));
-//		writeVector(v, out2);
-//		out2.close();
-//
-//		BufferedReader in1 = new BufferedReader(new FileReader("cats.txt"));
-//		System.out.println(readVector(in1).toString());
-//		in1.close();
+		ArrayVector v2 = new ArrayVector(dogs.length);
+		v2.fillFromMass(dogs);
 		
-		// РЎРµСЂРёР°Р»РёР·Р°С†РёСЏ		
-		ObjectOutputStream out1 = new ObjectOutputStream(new FileOutputStream("out.bin"));
-		out1.writeObject(v);
-		out1.close();
-		
-		// Р”РµСЃР°СЂРёР°Р»РёР·Р°С†РёСЏ
-		ObjectInputStream in = new ObjectInputStream(new FileInputStream("out.bin"));
-		Vector vv = (Vector)in.readObject();
-		System.out.println(vv.toString());;
-		in.close();
+//		System.out.println(v2.toString());
+		DataOutputStream out = new DataOutputStream(new FileOutputStream("dogs.bin"));
+		outputVector(v2, out);
+		out.close();
 
+		PrintWriter out2 = new PrintWriter(new BufferedWriter(new FileWriter("out.txt")));
+		writeVector(v2, out2);
+		writeVector(v, out2);
+		out2.close();
+		
+		BufferedReader in = new BufferedReader(new FileReader("out.txt"));
+		System.out.println(readVector(in));
+		System.out.println(readVector(in));
+		
+
+//		BufferedReader in = new BufferedReader(new FileReader("out.txt")); // InputStreamReader(System.in));
+//
+//		LinkedVector lv = new LinkedVector();
+//		lv.fillFromMass(dogs);
+		
+		
+		
+//		// Serialization
+//		ObjectOutputStream out1 = new ObjectOutputStream(new FileOutputStream("out.bin"));
+//		out1.writeObject(v);
+//		out1.close();
+		
+//		// Deserialization array vector
+//		ObjectInputStream in1 = new ObjectInputStream(new FileInputStream("out.bin"));
+//		lv = (LinkedVector) in1.readObject();
+//		in1.close();
+//		System.out.println(lv.toString());
+		// Deserialization array vector
+//		ObjectInputStream in1 = new ObjectInputStream(new FileInputStream("out.bin"));
+//		v = (ArrayVector) in1.readObject();
+//		in1.close();
+//
+//		System.out.println(v.toString());
 	}
 
 }

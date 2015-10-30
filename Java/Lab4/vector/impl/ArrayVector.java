@@ -4,7 +4,7 @@ import pr4.vector.IncompatibleVectorSizesException;
 import pr4.vector.Vector;
 import pr4.vector.VectorIndexOutOfBoundsException;
 
-public class ArrayVector implements Vector, Cloneable{
+public class ArrayVector implements Vector, Cloneable {
 	protected double vector[];
 
 	// constructor
@@ -153,13 +153,6 @@ public class ArrayVector implements Vector, Cloneable{
 		return s.toString().trim();
 	}
 	
-//	public Object clone() throws CloneNotSupportedException{
-//		Object cloneObj= (Vector)super.clone();
-//		
-//		 return cloneObj;	 
-//	}
-	
-    @Override
     public ArrayVector clone() throws CloneNotSupportedException {
         ArrayVector cloneArray = (ArrayVector) super.clone();
         cloneArray.vector = vector.clone();

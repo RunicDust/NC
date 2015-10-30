@@ -1,5 +1,4 @@
 package pr5.vector.impl;
-
 import pr5.vector.IncompatibleVectorSizesException;
 import pr5.vector.Vector;
 import pr5.vector.VectorIndexOutOfBoundsException;
@@ -7,7 +6,6 @@ import pr5.vector.impl.LinkedVector;
 
 public class LinkedVector implements Vector, Cloneable, java.io.Serializable{
 	
-
 	protected Nod head;
 	protected int size;
 	
@@ -17,7 +15,7 @@ public class LinkedVector implements Vector, Cloneable, java.io.Serializable{
 
 
 	// Inner Class for Nodes
-	public class Nod {
+	public class Nod implements java.io.Serializable {
 		public double element;
 		public Nod next;
 		public Nod prev;
