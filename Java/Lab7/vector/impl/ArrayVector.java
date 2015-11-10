@@ -43,6 +43,7 @@ public class ArrayVector implements Vector, Cloneable, java.io.Serializable {
 			}
 			vector = v_aux;
 		} else {
+			//todo можно заменить System.arraycopy()
 			for (int i = 0; i < mass.length; i++) {
 				vector[i] = mass[i];
 			}
@@ -155,7 +156,7 @@ public class ArrayVector implements Vector, Cloneable, java.io.Serializable {
 	
 	public Object clone() throws CloneNotSupportedException{
 		Object cloneObj= (Vector)super.clone();
-		 return cloneObj;		
+		 return cloneObj;
 	}
 
 	// // get min value in vector
