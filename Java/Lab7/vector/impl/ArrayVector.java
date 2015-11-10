@@ -17,7 +17,15 @@ public class ArrayVector implements Vector, Cloneable, java.io.Serializable {
 		return vector.length;
 	}
 
-	// get vector element in spec position
+	/**
+	 * если пишем коментарии для метода , то желательно его описать полностью как javadoc
+	 * это описание метода, входные параметры , что возвращает и исключения если есть
+	 * как-то так:
+	 * get vector element in spec position
+	 *
+	 * @param num
+	 * @return
+	 */
 	public double getElement(int num) {
 		if (num < 0 || num >= vector.length) {
 			throw new VectorIndexOutOfBoundsException("Bad index!");
